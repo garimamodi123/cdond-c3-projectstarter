@@ -112,8 +112,8 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
-      - yum -y install tar gzip
+      - checkout:
+         yum -y install tar gzip
       #- restore_cache:
        #   keys: [backend-build]
       - run:
