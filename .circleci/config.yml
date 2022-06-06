@@ -114,7 +114,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name : install tar and gzip
+          name : yum -y install tar gzip
           command: |
             yum -y install tar gzip
       - run:
@@ -122,7 +122,7 @@ jobs:
           command: |                       
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              -stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project= udacity-project3-347865384227 
               exit 0
