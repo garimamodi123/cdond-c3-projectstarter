@@ -122,7 +122,7 @@ jobs:
           command: |                       
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=Udacity_project3 \
+              --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"               
               exit 0
@@ -147,6 +147,26 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on fai 
         
+  configure-infrastructure:
+    docker:
+      - image: ansible/ansible
+    steps:
+      - checkout
+      # Checkout code from git
+      # Add ssh keys with fingerprint 
+      - 00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1
+      # attach workspace
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            exit 1
+      - run:
+          name: Configure server
+          command: |
+            # Your code here
+            exit 1
+      # Here's where you will add some code to rollback on failure      
 
 workflows:
   default:
