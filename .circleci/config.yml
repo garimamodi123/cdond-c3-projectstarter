@@ -151,13 +151,12 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      - checkout
-      - add_ssh_keys:
+      enum:
+        - checkout
+        - add_ssh_keys:
           fingerprints: ["ed:e9:83:cf:43:79:b8:a7:92:3b:e6:66:18:06:61:83"]
-      - attach_workspace:
-          root: ~/
-          paths: 
-            - project/.circleci/ansible/
+        - attach_workspace:
+            at: - project/.circleci/ansible/
 
       - run:
           name: Install dependencies tar, gzip, ansible, or awscli
