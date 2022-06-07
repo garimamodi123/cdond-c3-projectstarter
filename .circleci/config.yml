@@ -147,6 +147,33 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on fai 
+  configure-infrastructure:
+    docker:
+      - image: ansible/ansible
+    steps:
+      - checkout
+      - 00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1
+      # Checkout code from git
+      # Add ssh keys with fingerprint
+      # attach workspace
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+      - run:
+          name: Install dependencies tar, gzip, ansible, or awscli
+          command: |
+            yum -y install tar gzip ansible awscli
+            # Your code here
+            exit 0
+      - run:
+          name: Configure server
+          command: |
+            # Your code here
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+            exit 0
+      # Here's where you will add some code to rollback on failure      
         
       
 
