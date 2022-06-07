@@ -195,3 +195,5 @@ workflows:
           #filters: because of this area cicd pipeline was not detecting deployinfrastruction <branchname>
             #branches:
              # only: [test-feature-branch]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
