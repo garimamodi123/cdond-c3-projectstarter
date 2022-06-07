@@ -152,14 +152,12 @@ jobs:
       - image: ansible/ansible
     steps:
       - checkout
-      - 00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1
-      # Checkout code from git
-      # Add ssh keys with fingerprint
-      # attach workspace
-      - persist_to_workspace:
+      - add_ssh_keys:
+          fingerprints: ["ed:e9:83:cf:43:79:b8:a7:92:3b:e6:66:18:06:61:83"]
+      - attach_workspace:
           root: ~/
-          paths:
-            - project/.circleci/ansible/inventory.txt
+          at: 
+            - project/.circleci/ansible/
       - run:
           name: Install dependencies tar, gzip, ansible, or awscli
           command: |
@@ -170,7 +168,6 @@ jobs:
           name: Configure server
           command: |
             # Your code here
-            cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
             exit 0
       # Here's where you will add some code to rollback on failure      
