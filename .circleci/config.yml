@@ -147,38 +147,35 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on fai 
+
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      enum:
-        - checkout
-        - add_ssh_keys:
-          fingerprints: ["ed:e9:83:cf:43:79:b8:a7:92:3b:e6:66:18:06:61:83"]
-        - attach_workspace:
-            at: /project/.circleci/ansible/
-
-        - run:
-          name: Install dependencies tar, gzip, ansible, or awscli
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1"]
+      - attach_workspace:
+          at: /.circleci/ansible/
+      - run:
+          name: Install dependencies
           command: |
             apk add --no-cache \
                 python3 \
                 py3-pip \
-                && pip3 install --upgrade pip \
-                && pip3 install \
+            && pip3 install --upgrade pip \
+            && pip3 install \
                 awscli \
-                && rm -rf /var/cache/apk/*
+            && rm -rf /var/cache/apk/*
             apk add --update ansible
-            # Your code here
-            exit 0
-        - run:
+            
+      - run:
           name: Configure server
           command: |
-            # Your code here
-            ansible-playbook -i inventory.txt configure-server.yml
-            exit 0
-      # Here's where you will add some code to rollback on failure      
-        
+            ansible-playbook -i /.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
+      
+      - destroy-environment # Rollback on failure
+ 
       
 
 workflows:
