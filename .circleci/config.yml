@@ -149,19 +149,27 @@ jobs:
       # Here's where you will add some code to rollback on fai 
   configure-infrastructure:
     docker:
-      - image: ansible/ansible
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints: ["ed:e9:83:cf:43:79:b8:a7:92:3b:e6:66:18:06:61:83"]
       - attach_workspace:
           root: ~/
-          at: 
+          paths: 
             - project/.circleci/ansible/
+
       - run:
           name: Install dependencies tar, gzip, ansible, or awscli
           command: |
-            yum -y install tar gzip ansible awscli
+            apk add --no-cache \
+                python3 \
+                py3-pip \
+                && pip3 install --upgrade pip \
+                && pip3 install \
+                awscli \
+                && rm -rf /var/cache/apk/*
+            apk add --update ansible
             # Your code here
             exit 0
       - run:
