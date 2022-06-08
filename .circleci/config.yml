@@ -174,7 +174,7 @@ jobs:
           command: |
             ansible-playbook -i /.circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
       
-      - destroy-environment # Rollback on failure
+      #- destroy-environment # Rollback on failure
 
   run-migrations:
     docker:
