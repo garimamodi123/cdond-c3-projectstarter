@@ -209,6 +209,53 @@ jobs:
       - destroy-environment # Rollback on failure
 
      # Here's where you will add some code to rollback on failure  
+
+  deploy-frontend:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - attach_workspace:
+          at: /.circleci/ansible/
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            npm install
+            apk add --no-cache \
+                python3 \
+                py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+                awscli \
+            && rm -rf /var/cache/apk/*
+            apk add --update ansible
+            
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            #export API_URL="http://${BACKEND_IP}:3030"
+            #export API_URL="https://54.173.122.5:3030"
+            #echo "${API_URL}"
+            export BACKEND_IP=$(aws ec2 describe-instances)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy frontend objects
+          command: |
+            # your code here
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment # Rollback on failure
+      # Here's where you will add some code to rollback
  
       
 
@@ -232,7 +279,7 @@ workflows:
              # only: [test-feature-branch]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      #- deploy-frontend:
-       #   requires: [run-migrations]
+      - deploy-frontend:
+          requires: [run-migrations]
       #- deploy-backend:
        #   requires: [run-migrations]
