@@ -195,8 +195,6 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-           # npm cache clean --force
-            #npm install
             export NODE_ENV=Production
             export ENVIRONMENT=Production
             export VERSION=1
