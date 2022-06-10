@@ -260,8 +260,13 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - attach_workspace:
-          at: ~/
+      #- attach_workspace:
+      #    at: ~/
+      - run:
+          name: Install tar/gzip utility
+          command: |
+            yum install -y tar gzip
+            yum install -y unzip  
       - run:
           name: Install dependencies
           command: |
