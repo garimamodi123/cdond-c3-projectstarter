@@ -267,21 +267,9 @@ jobs:
           command: |
             yum install -y tar gzip
             yum install -y unzip  
-      - run:
-          name: Install dependencies
-          command: |
-            # your code here
-            cd frontend
-            npm install
-            apk add --no-cache \
-                python3 \
-                py3-pip \
-            && pip3 install --upgrade pip \
-            && pip3 install \
-                awscli \
-            && rm -rf /var/cache/apk/*
-            apk add --update ansible
-            
+            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
+            yum install -y nodejs
+      
       - run:
           name: Get backend url
           command: |
