@@ -195,8 +195,11 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm cache clean --force
-            npm install
+           # npm cache clean --force
+            #npm install
+            export NODE_ENV=Production
+            export ENVIRONMENT=Production
+            export VERSION=1
             # npm run build
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
@@ -261,9 +264,18 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - destroy-environment # Rollback on failure
+            aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID}
+       # Rollback on failure
       # Here's where you will add some code to rollback
+      
+      
+
+      
+
  
       
 
