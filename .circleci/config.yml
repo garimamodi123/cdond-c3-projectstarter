@@ -3,14 +3,43 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      # Add parameter here   
+      # Add parameter here  
+      workflow_id:
+          type: string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            destroy-environment
-            exit 0
+            echo "Destroy environment: << parameters.workflow_id >> "
+            # Your code here
+            aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
+            aws cloudformation delete-stack \
+                --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation delete-stack \
+                 --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      # Add parameter here 
+      workflow_id:
+          type: string
+    steps:
+      - run:
+          name: Revert migrations
+          # Add when this will run
+          when: on_fail
+          command: |
+            SUCCESS=$(curl --insecure  https://kvdb.io/TgV7H7gtjJZmGRJXJwZJpP/migration_<< parameters.workflow_id >>)
+            if(( $SUCCESS==1 ));
+            then
+                cd ~/project/backend
+                npm install
+                npm run migration:revert
+            fi
+
+
 
 jobs:
   build-frontend:
@@ -172,9 +201,12 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i /.circleci/ansible/inventory.txt /.circleci/ansible/configure-server.yml
+              cd .circleci/ansible
+              ansible-playbook -i inventory.txt configure-server.yml
+            #ansible-playbook -i /.circleci/ansible/inventory.txt /.circleci/ansible/configure-server.yml
       
-      - destroy-environment # Rollback on failure
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" # Rollback on failure
 
   run-migrations:
     docker:
@@ -200,9 +232,7 @@ jobs:
             export VERSION=1
             # npm run build
             npm run migrations > migrations_dump.txt
-            cat migrations_dump.txt
-            no_output_timeout: 30m
-
+            cat migrations_dump.txt      
       - run:
           name: Send migration results to Kvdb.io
           command: |
@@ -215,7 +245,10 @@ jobs:
                   curl https://kvdb.io/TgV7H7gtjJZmGRJXJwZJpP/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
             
-      - destroy-environment # Rollback on failure
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"# Rollback on failure
         
       # Here's where you will add some code to rollback on failure  
 
