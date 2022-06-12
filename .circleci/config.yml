@@ -294,13 +294,16 @@ jobs:
           name: Deploy frontend objects
           command: |
             # your code here
+            # your code here
             cd frontend
-            apt-get install sudo -y
-            sudo apt-get install npm
-            #npm install
+            curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
+            yum -y install nodejs
+            npm install -g npm
+            npm install oauth2
+            npm install webpack
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
