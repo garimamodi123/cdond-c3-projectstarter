@@ -289,7 +289,7 @@ jobs:
             cd frontend
             npm install
             npm run build
-            pip install -U awscli
+            sudo apt-get -qq install awscli
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
@@ -300,6 +300,28 @@ jobs:
        # Rollback on failure
       # Here's where you will add some code to rollback
       
+  deploy-backend:
+    docker:
+      # Docker image here that supports Ansible
+       - image: python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      -checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints: ["00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1"]
+      # attach workspace
+      - attach_workspace:
+          at: /.circleci/ansible/
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+      - run:
+          name: Deploy backend
+          command: |
+            # your code here
+      # Here's where you will add some code to rollback on failure  
       
   
 
