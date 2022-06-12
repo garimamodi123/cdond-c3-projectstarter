@@ -295,6 +295,7 @@ jobs:
           command: |
             # your code here
             cd frontend
+            apt-get install sudo -y
             sudo apt-get install npm
             #npm install
             npm run build
