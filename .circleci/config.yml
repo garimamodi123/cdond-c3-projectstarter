@@ -326,7 +326,12 @@ jobs:
           command: |
 
             # your code here
-            yum -y install tar gzip
+            #yum -y install tar gzip
+            apk update
+            apk upgrade
+            apk add unzip
+            apk add curl
+            #/usr/local/bin/python -m pip install --upgrade pip
             apk add --update nodejs nodejs-npm
             apk add --update ansible
             /usr/local/bin/python -m pip install --upgrade pip
