@@ -289,8 +289,15 @@ jobs:
             cd frontend
             npm install
             npm run build
-            sudo apt-get -qq install awscli
+            
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            apk add --no-cache \
+                python3 \
+                py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+                awscli \
+            && rm -rf /var/cache/apk/*
             aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -312,16 +319,43 @@ jobs:
           fingerprints: ["00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1"]
       # attach workspace
       - attach_workspace:
-          at: /.circleci/ansible/
+          at: ~/
       - run:
           name: Install dependencies
           command: |
+
             # your code here
+            yum -y install tar gzip
+            apk add --update nodejs nodejs-npm
+            apk add --update ansible
+            /usr/local/bin/python -m pip install --upgrade pip
+            pip install awscli --upgrade
+            #node --version
+            #npm --version
       - run:
           name: Deploy backend
           command: |
-            # your code here
+           # your code here
+            cd backend
+            npm i
+            npm run build
+            cd ..
+           # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+
+ 
+
+
+
       
   
 
