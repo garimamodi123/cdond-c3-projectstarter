@@ -387,7 +387,7 @@ jobs:
       - run:
           name: Backend smoke test
           command: |
-            BACKEND_IP=$(curl -H "token: IP-${CIRCLE_WORKFLOW_ID:0:9}" 
+            BACKEND_IP=$(curl -H "token: IP-${CIRCLE_WORKFLOW_ID:0:9}") 
             #            --request GET https://api.memstash.io/values/IP)
             #export BACKEND_IP=$(aws ec2 describe-instances \
              #   --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -461,7 +461,7 @@ jobs:
       - run:
           name: Get & Delete Old Stacks
           command: |
-            OldWorkflowID=$(curl -H "token: OldWorkflowID-${CIRCLE_WORKFLOW_ID}" 
+            OldWorkflowID=$(curl -H "token: OldWorkflowID-${CIRCLE_WORKFLOW_ID}") 
                        # --request GET https://api.memstash.io/values/OldWorkflowID)
             export STACKS=$(aws cloudformation list-stacks \
             --query "StackSummaries[*].StackName" \
