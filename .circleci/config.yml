@@ -337,7 +337,7 @@ jobs:
           fingerprints: ["00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1"]
       
       - attach_workspace:
-          at: /tmp/.circleci/ansible
+          at: /.circleci/ansible
       - run:
           name: Install dependencies
           command: |
@@ -355,19 +355,20 @@ jobs:
           name: Deploy backend
           command: |
            # your code here
-            cd backend
-            npm install
-            npm run build
-            cd ..
+           # cd backend
+            #npm install
+            #npm run build
+            #cd ..
            # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             ls -la
-            echo "mv artifac to ansibble -------"
-            mv artifact.tar.gz .circleci/ansible/
-            cd tmp/.circleci/ansible
-            echo "Contents  of the inventory.txt file is -------"
-            cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            #echo "mv artifac to ansibble -------"
+            #mv artifact.tar.gz .circleci/ansible/
+            #cd .circleci/ansible
+            #echo "Contents  of the inventory.txt file is -------"
+            #cat inventory.txt
+            #ansible-playbook -i inventory.txt deploy-backend.yml
+            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i /.circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
