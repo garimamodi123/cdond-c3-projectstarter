@@ -347,7 +347,7 @@ jobs:
             ls -la
             echo "mv artifac to ansibble -------"
             mv artifact.tar.gz .circleci/ansible/
-            cd .circleci/ansible
+            cd tmp/.circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
