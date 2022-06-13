@@ -318,41 +318,22 @@ jobs:
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: ["00:d9:f8:ec:28:55:9f:d1:e4:43:d5:bb:bb:f4:74:a1"]
-      # attach workspace
+      
       - attach_workspace:
-          at: ~/
+          at: /tmp/.circleci/ansible
       - run:
           name: Install dependencies
           command: |
 
             # your code here
             #yum -y install tar gzip
-            apk update
-            apk upgrade
-            apk add unzip
-            apk add curl
-            #/usr/local/bin/python -m pip install --upgrade pip
-            apk add --update nodejs nodejs-npm
+            
             apk add --update ansible
-            /usr/local/bin/python -m pip install --upgrade pip
-            pip install awscli --upgrade
+            apk add --update tar gzip curl
+            apk add --update openssh-client
             #node --version
             #npm --version
-      - run:
-          name: Env File
-          command: |
-              # echo NODE_ENV=production >> backend/.env
-              echo VERSION=1 >> backend/.env
-              echo TYPEORM_CONNECTION=postgres >> backend/.env
-              echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> backend/.env
-              echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> backend/.env
-              echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> backend/.env
-              echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-              echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-              echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-              echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-              echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-              cat backend/.env
+      
       - run:
           name: Deploy backend
           command: |
@@ -363,6 +344,7 @@ jobs:
             cd ..
            # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
+            ls -la
             echo "mv artifac to ansibble -------"
             mv artifact.tar.gz .circleci/ansible/
             cd .circleci/ansible
