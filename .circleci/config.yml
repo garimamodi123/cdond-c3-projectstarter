@@ -393,10 +393,14 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update tar gzip curl
+            Install npm nodejs
+            #sudo apt-get -y -qq update
+            #sudo apt-get -y -qq install python3
+            sudo apt-get -qq install awscli
       - run:
           name: Backend smoke test
           command: |
-            export BACKEND_IP=$(aws ec2 describe-instances \
+              export BACKEND_IP=$(aws ec2 describe-instances \
                 --query 'Reservations[*].Instances[*].PublicIpAddress' \
                 --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                 --output text)
