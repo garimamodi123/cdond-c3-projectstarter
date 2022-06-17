@@ -393,28 +393,28 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update tar gzip curl
-            Install npm nodejs
+            npm install
             #sudo apt-get -y -qq update
             #sudo apt-get -y -qq install python3
             sudo apt-get -qq install awscli
       - run:
           name: Backend smoke test
           command: |
-              export BACKEND_IP=$(aws ec2 describe-instances \
-                --query 'Reservations[*].Instances[*].PublicIpAddress' \
-                --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-                --output text)
-              export API_URL="http://${BACKEND_IP}:3030"
-              echo "${API_URL}"
-              #sleep 60
-              if curl "${API_URL}/api/status" | grep "ok"
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            #sleep 60
+            if curl "${API_URL}/api/status" | grep "ok"
               then
                 echo SUCCESS
                 exit 0
               else
                 echo FAIL
                 exit 1
-              fi
+            fi
           
       - run:
           name: Frontend smoke test.
