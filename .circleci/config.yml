@@ -280,7 +280,7 @@ jobs:
       #- attach_workspace:
        #   at: ~/
       - attach_workspace:
-          at: /.circleci/ansible
+          at: /backend
       - run:
           name: Install tar/gzip utility
           command: |
