@@ -155,7 +155,7 @@ jobs:
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
               --tags project=udapeople              
-              exit 0
+              
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -164,7 +164,7 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
-              exit 0   
+                
 
       - run:
           name: Add back-end ip to ansible inventory
@@ -187,11 +187,13 @@ jobs:
              # --query 'Reservations[*].Instances[*].PublicIpAddress' \
              # --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
              # --output text >> .circleci/ansible/inventory.txt
-            exit 0
+            
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" # Rollback on failure
       # Here's where you will add some code to rollback on fai 
 
   configure-infrastructure:
@@ -263,11 +265,9 @@ jobs:
             fi
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"     
-      
-          # Rollback on failure
-      
+      #- revert-migrations:
+          #workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"     
+        
       # Here's where you will add some code to rollback on failure  
 
   deploy-frontend:
@@ -279,6 +279,8 @@ jobs:
       - checkout
       #- attach_workspace:
        #   at: ~/
+      - attach_workspace:
+          at: /.circleci/ansible
       - run:
           name: Install tar/gzip utility
           command: |
@@ -287,10 +289,7 @@ jobs:
             apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
-            ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-            
-
-      
+            ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update      
       - run:
           name: Get backend url
           command: |
@@ -298,11 +297,16 @@ jobs:
             #export API_URL="http://${BACKEND_IP}:3030"
             #export API_URL="https://54.173.122.5:3030"
             #echo "${API_URL}"
-            export BACKEND_IP=$(aws ec2 describe-instances)
+            # export BACKEND_IP=$(aws ec2 describe-instances)
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:project,Values=udacity" \
+              --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
+
       - run:
           name: Deploy frontend objects
           command: |
