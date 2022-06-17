@@ -408,12 +408,10 @@ jobs:
             echo "${API_URL}"
             #sleep 60
             if curl "${API_URL}/api/status" | grep "ok"
-              then
-                echo SUCCESS
-                exit 0
-              else
-                echo FAIL
-                exit 1
+            then
+              return 0
+            else
+              return 1
             fi
           
       - run:
