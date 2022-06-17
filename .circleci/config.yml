@@ -279,12 +279,17 @@ jobs:
       - checkout
       #- attach_workspace:
        #   at: ~/
-      - attach_workspace:
-          at: /backend
       - run:
           name: Install tar/gzip utility
           command: |
             yum install -y tar gzip
+
+      - attach_workspace:
+          at: /backend
+      - run:
+          name: Install dependencies
+          command: |
+            #yum install -y tar gzip
             yum install -y unzip  
             apt-get update && sudo apt-get install -yy less
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
