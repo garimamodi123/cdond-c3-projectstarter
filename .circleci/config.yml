@@ -415,12 +415,14 @@ jobs:
                   --output text)        
             echo BACKEND_URL: http://${BACKEND_IP}:3030/api/status
               if 
-                 curl -s http://${BACKEND_IP}:3030/api/status | grep "ok"
-               then
+                 curl http://${BACKEND_IP}:3030/api/status | grep "ok"
+              then
+                 echo "success"
                  exit 0
               else
+                 echo "fail"
                  exit 1
-               fi  
+              fi  
           
       - run:
           name: Frontend smoke test.
