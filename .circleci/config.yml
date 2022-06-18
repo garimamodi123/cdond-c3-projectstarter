@@ -396,7 +396,7 @@ jobs:
             #npm install
             #sudo apt-get -y -qq update
             #sudo apt-get -y -qq install python3
-            sudo apt-get -qq install awscli
+            #sudo apt-get -qq install awscli
       - run:
           name: Backend smoke test
           command: |
