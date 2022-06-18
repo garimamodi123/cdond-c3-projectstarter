@@ -372,11 +372,19 @@ jobs:
             ls -la
             #echo "mv artifac to ansibble -------"
             #mv artifact.tar.gz .circleci/ansible/
-            #cd .circleci/ansible
+            cd .circleci/ansible
             #echo "Contents  of the inventory.txt file is -------"
             #cat inventory.txt
             #ansible-playbook -i inventory.txt deploy-backend.yml
-            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i /.circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
+            export ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i /.circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
+
+            echo [web] > inventory.txt
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:project,Values=udapeople" \
+            --output text >> inventory.txt
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -418,10 +426,10 @@ jobs:
                  curl -s http://${BACKEND_IP}:3030/api/status | grep "ok"
               then
                  echo "success"
-                 exit 0
+                 return 0
               else
                  echo "fail"
-                 exit 1
+                 return 1
               fi  
           
       - run:
