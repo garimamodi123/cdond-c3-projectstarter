@@ -450,10 +450,10 @@ jobs:
              # return 1
             #fi
   
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" # Rollback on failure  
+      #- destroy-environment:
+       #   workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      #- revert-migrations:
+       #   workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" # Rollback on failure  
   
   
   cloudfront-update:
@@ -462,7 +462,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Dependencies
+          name: Install Dependencies
           command: |
             yum -y install tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
