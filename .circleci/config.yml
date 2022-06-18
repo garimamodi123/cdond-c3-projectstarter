@@ -415,7 +415,7 @@ jobs:
                   --output text)        
             echo BACKEND_URL: http://${BACKEND_IP}:3030/api/status
               if 
-                 curl http://${BACKEND_IP}:3030/api/status | grep "ok"
+                 curl -s http://${BACKEND_IP}:3030/api/status | grep "ok"
               then
                  echo "success"
                  exit 0
