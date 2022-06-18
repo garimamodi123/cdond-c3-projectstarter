@@ -13,7 +13,7 @@ commands:
           command: |
             echo "Destroy environment: << parameters.workflow_id >> "
             # Your code here
-            #aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             #aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force  # delete s3 bucket
             aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -383,19 +383,11 @@ jobs:
             ls -la
             #echo "mv artifac to ansibble -------"
             #mv artifact.tar.gz .circleci/ansible/
-            cd .circleci/ansible
+            #cd .circleci/ansible
             #echo "Contents  of the inventory.txt file is -------"
             #cat inventory.txt
             #ansible-playbook -i inventory.txt deploy-backend.yml
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i /.circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
-
-            echo [web] > inventory.txt
-            aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters "Name=tag:project,Values=udapeople" \
-            --output text >> inventory.txt
-            cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
