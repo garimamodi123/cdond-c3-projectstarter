@@ -223,6 +223,7 @@ jobs:
           command: |
               cd .circleci/ansible
               pwd
+              cd /root/project/.circleci/ansible
               cat inventory.txt
               echo "hello"
               ansible-playbook -i inventory.txt configure-server.yml
