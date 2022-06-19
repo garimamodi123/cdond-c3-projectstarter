@@ -182,12 +182,14 @@ jobs:
 
             pwd
             #echo [web] > inventory.txt
-            
+            cd .circleci/ansible
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text >> .circleci/ansible/inventory.txt
+              --output text >> inventory.txt
+             # --output text >> .circleci/ansible/inventory.txt
             cat inventory.txt
+            
             
       - persist_to_workspace:
           root: ~/
