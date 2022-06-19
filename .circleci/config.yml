@@ -302,10 +302,14 @@ jobs:
             #export API_URL="https://54.173.122.5:3030"
             #echo "${API_URL}"
             # export BACKEND_IP=$(aws ec2 describe-instances)
-            export BACKEND_IP=$(aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text)
+            #export BACKEND_IP=$(aws ec2 describe-instances \
+             # --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              #--filters "Name=tag:project,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              #--output text)
+            export BACKEND_IP=$(aws ec2 --region us-east-1 describe-instances \
+                  --filters Name=instance-state-name,Values=running Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} \
+                  --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                  --output text)
             #export BACKEND_IP=$(aws ec2 describe-instances...............)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
