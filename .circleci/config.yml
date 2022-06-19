@@ -221,10 +221,12 @@ jobs:
       - run:
           name: Configure server
           command: |
-              cd /.circleci/ansible
+              cd .circleci/ansible
               pwd
               cat inventory.txt
+              echo "hello"
               ansible-playbook -i inventory.txt configure-server.yml
+              echo "hello1"
                #ansible-playbook -i project/.circleci/ansible/inventory.txt /.circleci/ansible/configure-server.yml
 
             
