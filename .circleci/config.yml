@@ -233,8 +233,11 @@ jobs:
               #ansible-playbook -i inventory.txt configure-server.yml
                #ansible-playbook -i project/.circleci/ansible/inventory.txt /.circleci/ansible/configure-server.yml
 
-              pwd
+              
+              
               cat .circleci/ansible/inventory.txt
+              cd .circleci/ansible
+              pwd
               echo ENVIRONMENT=production > "backend/.env"
               ls
               echo TYPEORM_CONNECTION=postgres >> "backend/.env"
