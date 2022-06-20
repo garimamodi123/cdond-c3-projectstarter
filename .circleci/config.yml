@@ -500,16 +500,18 @@ jobs:
   
   cloudfront-update:
     docker:
-      - image: amazon/aws-cli
+       - image: cimg/python:3.9
     steps:
-      - checkout
+     - checkout
+      - attach_workspace:
+          at: ~/
       - run:
-          name: Install Dependencies
+          name: Install dependencies
           command: |
-            yum -y install tar gzip
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+            # your code here
+            sudo apt-get install -y curl tar gzip
             pip3 install awscli
-            
+                
       - run:
           name: Update cloudfront distribution
           command: |
