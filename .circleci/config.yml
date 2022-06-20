@@ -220,7 +220,7 @@ jobs:
             && rm -rf /var/cache/apk/*
             #apk add --update ansible
             #apk add --update nodejs npm pm2
-            apk add --update ansible curl rsync openssh nodejs npm
+            apk add --update ansible curl rsync openssh nodejs npm pm2
             
       - run:
           name: Configure server
@@ -229,6 +229,7 @@ jobs:
               pwd
               #cat inventory.txt
               cd .circleci/ansible
+              pwd
               ansible-playbook -i inventory.txt configure-server.yml
                #ansible-playbook -i project/.circleci/ansible/inventory.txt /.circleci/ansible/configure-server.yml
 
