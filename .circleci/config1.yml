@@ -462,21 +462,21 @@ jobs:
             echo BACKEND_URL: http://${BACKEND_IP}:3030/api/status 
             echo "API_URL=$API_URL" >> frontend/.env
             #curl -s http://${BACKEND_IP}:3030/api/status | grep "ok"
-              #if 
-               #  curl -s http://${BACKEND_IP}:3030/api/status | grep "ok"
-              #then
-               #  echo "success"
-               #  return 0
-              #else
-               #  echo "fail"
-               #  return 1
-              #fi  
+              if 
+                 curl -s http://${BACKEND_IP}:3030/api/status | grep "ok"
+              then
+                 echo "success"
+                 return 0
+              else
+                 echo "fail"
+                 return 1
+              fi  
 
-            # pwd
-            #cat .circleci/ansible/inventory.txt
-            #cat ~/output.txt
-            #export API_URL=`cat ~/output.txt`
-            #echo "API_URL: $API_URL"
+             pwd
+            cat .circleci/ansible/inventory.txt
+            cat ~/output.txt
+            export API_URL=`cat ~/output.txt`
+            echo "API_URL: $API_URL"
 
           
       - run:
@@ -485,12 +485,12 @@ jobs:
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-west-2.amazonaws.com/#/employees"
             echo ${URL}
             
-            #if curl -s ${URL} | grep "Welcome"
-            #then
-            #  return 1
-            #else
-            #  return 1
-            #fi
+            if curl -s ${URL} | grep "Welcome"
+            then
+              return 1
+            else
+              return 1
+            fi
   
       #- destroy-environment:
        #   workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -592,8 +592,8 @@ workflows:
           requires: [run-migrations, deploy-frontend]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
+     # - cloudfront-update:
+      #    requires: [smoke-test]
           
       #- cleanup:
        #   requires: [cloudfront-update]
