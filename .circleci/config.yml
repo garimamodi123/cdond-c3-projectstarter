@@ -220,7 +220,7 @@ jobs:
             && rm -rf /var/cache/apk/*
             #apk add --update ansible
             #apk add --update nodejs npm pm2
-            #apk add --update ansible curl rsync openssh nodejs npm
+            apk add --update ansible curl rsync openssh nodejs npm
             
       - run:
           name: Configure server
@@ -267,6 +267,8 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            pwd
+            ls
             cd backend
             export NODE_ENV=Production
             export ENVIRONMENT=Production
@@ -277,6 +279,8 @@ jobs:
       - run:
           name: Send migration results to Kvdb.io
           command: |
+            pwd
+            ls
             cd backend
             if grep -q "has been executed successfully." migrations_dump.txt
                 then
