@@ -273,7 +273,7 @@ jobs:
             export NODE_ENV=Production
             export ENVIRONMENT=Production
             export VERSION=1
-            npm i
+            
             # npm run build
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt      
