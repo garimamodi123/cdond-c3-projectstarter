@@ -508,16 +508,20 @@ jobs:
           command: |
             yum -y install tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install -y nodejs
+            #yum install -y nodejs
+            apk add --no-cache \
+                python3 \
+                py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install \
+                awscli \
+            && rm -rf /var/cache/apk/*
       - run:
           name: Update cloudfront distribution
           command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
+            aws cloudformation deploy --template-file .circleci/files/cloudfront.yml --stack-name InitialStack-${CIRCLE_WORKFLOW_ID:0:7} --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --tags project=udapeople
              # --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
-              --stack-name InitialStack-${CIRCLE_WORKFLOW_ID:0:7}\
-              --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=udapeople
+              
              
             #--request PUT \
             #--data "$OldWorkflowID" https://api.memstash.io/values/OldWorkflowID
