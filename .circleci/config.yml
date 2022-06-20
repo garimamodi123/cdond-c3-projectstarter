@@ -508,8 +508,8 @@ jobs:
           command: |
             yum -y install tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            #yum install -y nodejs
-            sudo apt-get -qq install awscli
+            pip3 install awscli
+            
       - run:
           name: Update cloudfront distribution
           command: |
