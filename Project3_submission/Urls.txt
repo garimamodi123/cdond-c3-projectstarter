@@ -1,0 +1,4 @@
+Public Url to GitHub repository (not private) [URL01]  :https://github.com/garimamodi123/cdond-c3-projectstarter.git
+Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02] : https://udapeople-34d601f.s3-website-us-east-1.amazonaws.com/#/employees/
+Public URL to your Prometheus Server [URL05]DNS: ec2-44-204-163-155.compute-1.amazonaws.com
+
