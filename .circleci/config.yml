@@ -34,6 +34,7 @@ jobs:
             npm run build
             npm audit
             npm audit fix
+            exit 0
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
