@@ -92,7 +92,7 @@ jobs:
             cd frontend
             npm install
             npm run test        
-                  
+            exit 0     
   test-backend:
     docker:
       # Docker image here
